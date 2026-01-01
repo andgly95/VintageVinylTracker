@@ -13,7 +13,7 @@ const config = {
 			strict: true
 		}),
 		paths: {
-			base: process.env.NODE_ENV === 'production' ? '/VintageVinylTracker' : ''
+			base: process.env.GITHUB_PAGES === 'true' ? '/VintageVinylTracker' : ''
 		}
 	}
 };
