@@ -10,7 +10,7 @@ import type { BlueChipRecord } from '../domain/types';
 export const blueChipRecords: BlueChipRecord[] = [
 	// === BLUE NOTE RECORDS ===
 	{
-		masterId: 68441,
+		masterId: 62462,
 		rank: 1,
 		category: 'blue_note',
 		artist: 'Art Blakey & The Jazz Messengers',
@@ -25,7 +25,7 @@ export const blueChipRecords: BlueChipRecord[] = [
 		thumb: 'https://i.discogs.com/placeholder-moanin.jpg'
 	},
 	{
-		masterId: 71193,
+		masterId: 118117,
 		rank: 2,
 		category: 'blue_note',
 		artist: 'Cannonball Adderley',
@@ -39,7 +39,7 @@ export const blueChipRecords: BlueChipRecord[] = [
 		]
 	},
 	{
-		masterId: 63859,
+		masterId: 192306,
 		rank: 3,
 		category: 'blue_note',
 		artist: 'Lee Morgan',
@@ -53,7 +53,7 @@ export const blueChipRecords: BlueChipRecord[] = [
 		]
 	},
 	{
-		masterId: 54753,
+		masterId: 47828,
 		rank: 4,
 		category: 'blue_note',
 		artist: 'Herbie Hancock',
@@ -67,7 +67,7 @@ export const blueChipRecords: BlueChipRecord[] = [
 		]
 	},
 	{
-		masterId: 95374,
+		masterId: 140424,
 		rank: 5,
 		category: 'blue_note',
 		artist: 'Wayne Shorter',
@@ -81,7 +81,7 @@ export const blueChipRecords: BlueChipRecord[] = [
 		]
 	},
 	{
-		masterId: 73298,
+		masterId: 155008,
 		rank: 6,
 		category: 'blue_note',
 		artist: 'Horace Silver',
@@ -95,7 +95,7 @@ export const blueChipRecords: BlueChipRecord[] = [
 		]
 	},
 	{
-		masterId: 57115,
+		masterId: 178718,
 		rank: 7,
 		category: 'blue_note',
 		artist: 'Kenny Burrell',
@@ -109,7 +109,7 @@ export const blueChipRecords: BlueChipRecord[] = [
 		]
 	},
 	{
-		masterId: 99281,
+		masterId: 72373,
 		rank: 8,
 		category: 'blue_note',
 		artist: 'Freddie Hubbard',
@@ -122,7 +122,7 @@ export const blueChipRecords: BlueChipRecord[] = [
 		]
 	},
 	{
-		masterId: 30970,
+		masterId: 64167,
 		rank: 9,
 		category: 'blue_note',
 		artist: 'Eric Dolphy',
@@ -136,7 +136,7 @@ export const blueChipRecords: BlueChipRecord[] = [
 		]
 	},
 	{
-		masterId: 37879,
+		masterId: 62796,
 		rank: 10,
 		category: 'blue_note',
 		artist: 'Hank Mobley',
