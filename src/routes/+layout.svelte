@@ -32,6 +32,7 @@
 				<!-- Desktop nav -->
 				<nav class="hidden md:flex items-center gap-6">
 					<a href="{base}/" class="text-gray-300 hover:text-white transition-colors">Dashboard</a>
+					<a href="{base}/collection" class="text-gray-300 hover:text-white transition-colors">Collection</a>
 					<a href="{base}/watchlist" class="text-gray-300 hover:text-white transition-colors">Watchlist</a>
 					<a href="{base}/labels" class="text-gray-300 hover:text-white transition-colors">Labels</a>
 				</nav>
@@ -41,6 +42,7 @@
 			{#if isMenuOpen}
 				<nav class="md:hidden mt-4 pb-2 flex flex-col gap-3">
 					<a href="{base}/" class="text-gray-300 hover:text-white transition-colors" on:click={() => isMenuOpen = false}>Dashboard</a>
+					<a href="{base}/collection" class="text-gray-300 hover:text-white transition-colors" on:click={() => isMenuOpen = false}>Collection</a>
 					<a href="{base}/watchlist" class="text-gray-300 hover:text-white transition-colors" on:click={() => isMenuOpen = false}>Watchlist</a>
 					<a href="{base}/labels" class="text-gray-300 hover:text-white transition-colors" on:click={() => isMenuOpen = false}>Labels</a>
 				</nav>
