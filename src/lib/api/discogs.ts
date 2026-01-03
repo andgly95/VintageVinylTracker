@@ -14,14 +14,15 @@ import type {
 } from '../domain/types';
 
 // Use CORS proxy for browser requests since Discogs API blocks CORS
-const CORS_PROXY = 'https://corsproxy.io/?';
+// allorigins is more reliable than corsproxy.io
+const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
 const DISCOGS_API_BASE = 'https://api.discogs.com';
 const USER_AGENT = 'VintageVinylTracker/0.1.0';
 
 // Simple in-memory cache
 const cache = new Map<string, { data: unknown; timestamp: number }>();
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours for stable data
-const RATE_LIMIT_DELAY = 2500; // 2.5 seconds between calls (safe for 25/min)
+const RATE_LIMIT_DELAY = 5000; // 5 seconds between calls to avoid proxy rate limits
 
 let lastRequestTime = 0;
 
