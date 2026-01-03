@@ -2,13 +2,24 @@
 	import { base } from '$app/paths';
 	import { blueChipRecords, getTopRecords, getCategoryDisplayName, searchRecords } from '$lib/data/blueChipRecords';
 	import { topTen, watchlist, addToWatchlist } from '$lib/stores/watchlist';
-	import type { BlueChipCategory, BlueChipRecord } from '$lib/domain/types';
+	import { collection, addToCollection } from '$lib/stores/collection';
+	import type { BlueChipCategory, BlueChipRecord, Condition } from '$lib/domain/types';
 
 	let searchQuery = '';
 	let searchResults: BlueChipRecord[] = [];
 	let showSearch = false;
 
+	// Add to collection modal state
+	let showAddToCollection = false;
+	let selectedRecord: BlueChipRecord | null = null;
+	let addCondition: Condition = 'VG+';
+	let addPurchasePrice: number | undefined;
+	let addNotes = '';
+	let addLabel = '';
+	let addCatno = '';
+
 	const categories: BlueChipCategory[] = ['blue_note', 'columbia', 'prestige', 'impulse', 'riverside', 'contemporary', 'atlantic', 'verve'];
+	const conditions: Condition[] = ['M', 'NM', 'VG+', 'VG', 'G+', 'G', 'F', 'P'];
 
 	function handleSearch() {
 		if (searchQuery.trim()) {
@@ -40,6 +51,45 @@
 
 	function isInWatchlist(masterId: number): boolean {
 		return $watchlist.some(item => item.masterId === masterId);
+	}
+
+	function isInCollection(masterId: number): boolean {
+		return $collection.some(item => item.masterId === masterId);
+	}
+
+	function openAddToCollection(record: BlueChipRecord) {
+		selectedRecord = record;
+		// Pre-fill with first pressing info if available
+		const firstPressing = record.keyPressings[0];
+		if (firstPressing) {
+			addLabel = firstPressing.label;
+			addCatno = firstPressing.catno;
+		}
+		showAddToCollection = true;
+	}
+
+	function handleAddToCollection() {
+		if (!selectedRecord) return;
+		addToCollection(selectedRecord.masterId, selectedRecord.artist, selectedRecord.title, {
+			condition: addCondition,
+			purchasePrice: addPurchasePrice,
+			notes: addNotes,
+			label: addLabel,
+			catno: addCatno,
+			year: selectedRecord.year,
+			thumb: selectedRecord.thumb
+		});
+		closeAddToCollection();
+	}
+
+	function closeAddToCollection() {
+		showAddToCollection = false;
+		selectedRecord = null;
+		addCondition = 'VG+';
+		addPurchasePrice = undefined;
+		addNotes = '';
+		addLabel = '';
+		addCatno = '';
 	}
 </script>
 
@@ -194,29 +244,137 @@
 							</div>
 						</a>
 
-						<button
-							on:click|preventDefault={() => handleAddToWatchlist(record)}
-							class="flex-shrink-0 p-2 rounded-full hover:bg-gray-600 transition-colors"
-							class:text-vinyl-label={isInWatchlist(record.masterId)}
-							class:text-gray-500={!isInWatchlist(record.masterId)}
-							title={isInWatchlist(record.masterId) ? 'In watchlist' : 'Add to watchlist'}
-						>
-							{#if isInWatchlist(record.masterId)}
-								<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-									<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-								</svg>
+						<div class="flex-shrink-0 flex items-center gap-1">
+							<!-- Collection button -->
+							{#if isInCollection(record.masterId)}
+								<span class="p-2 text-green-400" title="In collection">
+									<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+										<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+									</svg>
+								</span>
 							{:else}
-								<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-								</svg>
+								<button
+									on:click|preventDefault|stopPropagation={() => openAddToCollection(record)}
+									class="p-2 rounded-full hover:bg-gray-600 transition-colors text-gray-500 hover:text-green-400"
+									title="I own this"
+								>
+									<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+									</svg>
+								</button>
 							{/if}
-						</button>
+
+							<!-- Watchlist button -->
+							<button
+								on:click|preventDefault|stopPropagation={() => handleAddToWatchlist(record)}
+								class="p-2 rounded-full hover:bg-gray-600 transition-colors"
+								class:text-vinyl-label={isInWatchlist(record.masterId)}
+								class:text-gray-500={!isInWatchlist(record.masterId)}
+								title={isInWatchlist(record.masterId) ? 'In watchlist' : 'Add to watchlist'}
+							>
+								{#if isInWatchlist(record.masterId)}
+									<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+										<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+									</svg>
+								{:else}
+									<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+									</svg>
+								{/if}
+							</button>
+						</div>
 					</div>
 				</div>
 			{/each}
 		</div>
 	</section>
 </div>
+
+<!-- Add to Collection Modal -->
+{#if showAddToCollection && selectedRecord}
+	<div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+		<div class="bg-vinyl-groove rounded-lg max-w-md w-full p-6 space-y-4">
+			<h3 class="text-xl font-bold text-white">Add to Collection</h3>
+			<p class="text-gray-400">{selectedRecord.title} - {selectedRecord.artist}</p>
+
+			<div class="space-y-4">
+				<div class="grid grid-cols-2 gap-4">
+					<div>
+						<label for="addLabel" class="block text-sm text-gray-400 mb-1">Label</label>
+						<input
+							id="addLabel"
+							type="text"
+							bind:value={addLabel}
+							placeholder="e.g., Blue Note"
+							class="w-full bg-vinyl-black border border-gray-600 rounded px-3 py-2"
+						/>
+					</div>
+					<div>
+						<label for="addCatno" class="block text-sm text-gray-400 mb-1">Catalog #</label>
+						<input
+							id="addCatno"
+							type="text"
+							bind:value={addCatno}
+							placeholder="e.g., BLP 4003"
+							class="w-full bg-vinyl-black border border-gray-600 rounded px-3 py-2"
+						/>
+					</div>
+				</div>
+
+				<div class="grid grid-cols-2 gap-4">
+					<div>
+						<label for="addCondition" class="block text-sm text-gray-400 mb-1">Condition</label>
+						<select
+							id="addCondition"
+							bind:value={addCondition}
+							class="w-full bg-vinyl-black border border-gray-600 rounded px-3 py-2"
+						>
+							{#each conditions as cond}
+								<option value={cond}>{cond}</option>
+							{/each}
+						</select>
+					</div>
+					<div>
+						<label for="addPrice" class="block text-sm text-gray-400 mb-1">Price Paid ($)</label>
+						<input
+							id="addPrice"
+							type="number"
+							bind:value={addPurchasePrice}
+							placeholder="0"
+							class="w-full bg-vinyl-black border border-gray-600 rounded px-3 py-2"
+						/>
+					</div>
+				</div>
+
+				<div>
+					<label for="addNotes" class="block text-sm text-gray-400 mb-1">Notes</label>
+					<input
+						id="addNotes"
+						type="text"
+						bind:value={addNotes}
+						placeholder="e.g., Deep groove, RVG, ear mark"
+						class="w-full bg-vinyl-black border border-gray-600 rounded px-3 py-2"
+					/>
+				</div>
+			</div>
+
+			<div class="flex justify-end gap-3 pt-4">
+				<button
+					on:click={closeAddToCollection}
+					class="btn-secondary"
+				>
+					Cancel
+				</button>
+				<button
+					on:click={handleAddToCollection}
+					class="btn-primary"
+				>
+					Add to Collection
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <style>
 	.line-clamp-2 {
