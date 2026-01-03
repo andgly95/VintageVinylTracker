@@ -3,6 +3,7 @@
 	import { blueChipRecords, getTopRecords, getCategoryDisplayName, searchRecords, getRecordByMasterId } from '$lib/data/blueChipRecords';
 	import { topTen, watchlist, addToWatchlist } from '$lib/stores/watchlist';
 	import { collection, addToCollection } from '$lib/stores/collection';
+	import { albumArtCache } from '$lib/stores/albumArtCache';
 	import AlbumArt from '$lib/components/AlbumArt.svelte';
 	import type { BlueChipCategory, BlueChipRecord, Condition } from '$lib/domain/types';
 
@@ -61,6 +62,10 @@
 	function getCategoryForMasterId(masterId: number): BlueChipCategory | undefined {
 		const record = getRecordByMasterId(masterId);
 		return record?.category;
+	}
+
+	function getCoverUrl(masterId: number): string | undefined {
+		return $albumArtCache[masterId]?.url;
 	}
 
 	function openAddToCollection(record: BlueChipRecord) {
@@ -136,6 +141,7 @@
 							title={record.title}
 							artist={record.artist}
 							category={record.category}
+							imageUrl={getCoverUrl(record.masterId)}
 							size="sm"
 						/>
 						<div class="flex-1 min-w-0">
@@ -173,6 +179,7 @@
 									title={item.title}
 									artist={item.artist}
 									category={getCategoryForMasterId(item.masterId)}
+									imageUrl={getCoverUrl(item.masterId)}
 									size="fill"
 								/>
 								<span class="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
@@ -223,6 +230,7 @@
 									title={item.title}
 									artist={item.artist}
 									category={getCategoryForMasterId(item.masterId)}
+									imageUrl={getCoverUrl(item.masterId)}
 									size="fill"
 								/>
 								<span class="absolute top-2 left-2 bg-vinyl-label text-vinyl-black text-xs font-bold px-2 py-1 rounded">
@@ -294,6 +302,7 @@
 										title={record.title}
 										artist={record.artist}
 										category={record.category}
+										imageUrl={getCoverUrl(record.masterId)}
 										size="md"
 									/>
 								</div>

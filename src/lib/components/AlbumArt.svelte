@@ -5,6 +5,9 @@
 	export let artist: string;
 	export let category: BlueChipCategory | undefined = undefined;
 	export let size: 'sm' | 'md' | 'lg' | 'fill' = 'md';
+	export let imageUrl: string | undefined = undefined;
+
+	let imageError = false;
 
 	// Generate a consistent color based on category or artist name
 	const categoryColors: Record<BlueChipCategory, string> = {
@@ -33,6 +36,7 @@
 
 	$: gradient = category ? categoryColors[category] : getArtistGradient(artist);
 	$: initials = title.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+	$: showImage = imageUrl && !imageError;
 
 	const sizeClasses = {
 		sm: 'w-12 h-12 text-lg',
@@ -40,11 +44,30 @@
 		lg: 'w-24 h-24 text-3xl',
 		fill: 'w-full h-full aspect-square text-4xl'
 	};
+
+	function handleImageError() {
+		imageError = true;
+	}
+
+	// Reset error state when URL changes
+	$: if (imageUrl) {
+		imageError = false;
+	}
 </script>
 
-<div
-	class="rounded-lg bg-gradient-to-br {gradient} flex items-center justify-center font-bold text-white/80 {sizeClasses[size]}"
-	title="{title} - {artist}"
->
-	{initials}
-</div>
+{#if showImage}
+	<img
+		src={imageUrl}
+		alt="{title} - {artist}"
+		class="rounded-lg object-cover {sizeClasses[size]}"
+		on:error={handleImageError}
+		loading="lazy"
+	/>
+{:else}
+	<div
+		class="rounded-lg bg-gradient-to-br {gradient} flex items-center justify-center font-bold text-white/80 {sizeClasses[size]}"
+		title="{title} - {artist}"
+	>
+		{initials}
+	</div>
+{/if}

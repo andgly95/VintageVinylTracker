@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
+	import { onMount } from 'svelte';
 	import { blueChipRecords, getCategoryDisplayName } from '$lib/data/blueChipRecords';
 	import { watchlist, addToWatchlist, topTen } from '$lib/stores/watchlist';
 	import { collection, addToCollection } from '$lib/stores/collection';
+	import { albumArtCache, fetchAlbumArt } from '$lib/stores/albumArtCache';
 	import { getMarketplaceUrl } from '$lib/api/discogs';
 	import { getLabelVariantDisplayName, getQualityGrade } from '$lib/domain/pressingEvaluator';
+	import AlbumArt from '$lib/components/AlbumArt.svelte';
 	import type { BlueChipRecord, KeyPressing, Condition } from '$lib/domain/types';
 
 	$: masterId = parseInt($page.params.id);
@@ -33,6 +36,21 @@
 		if (showOnlyFirstPressings && !p.isFirstPressing) return false;
 		return true;
 	}) || [];
+
+	// Album art from cache
+	$: coverUrl = $albumArtCache[masterId]?.url;
+
+	// Fetch album art when page loads
+	onMount(() => {
+		if (masterId && !albumArtCache.get(masterId)) {
+			fetchAlbumArt(masterId);
+		}
+	});
+
+	// Also fetch when masterId changes (navigation between records)
+	$: if (masterId && !albumArtCache.get(masterId)) {
+		fetchAlbumArt(masterId);
+	}
 
 	function handleAddToWatchlist() {
 		if (!record) return;
@@ -116,9 +134,15 @@
 		<!-- Header -->
 		<div class="card">
 			<div class="flex flex-col md:flex-row gap-6">
-				<!-- Album art placeholder -->
-				<div class="w-full md:w-48 aspect-square bg-gray-700 rounded-lg flex items-center justify-center text-6xl flex-shrink-0">
-					🎵
+				<!-- Album art -->
+				<div class="w-full md:w-48 flex-shrink-0">
+					<AlbumArt
+						title={record.title}
+						artist={record.artist}
+						category={record.category}
+						imageUrl={coverUrl}
+						size="fill"
+					/>
 				</div>
 
 				<div class="flex-1">
