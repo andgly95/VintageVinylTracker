@@ -13,6 +13,8 @@ import type {
 	Release
 } from '../domain/types';
 
+// Use CORS proxy for browser requests since Discogs API blocks CORS
+const CORS_PROXY = 'https://corsproxy.io/?';
 const DISCOGS_API_BASE = 'https://api.discogs.com';
 const USER_AGENT = 'VintageVinylTracker/0.1.0';
 
@@ -33,20 +35,14 @@ async function rateLimitedFetch(url: string): Promise<Response> {
 
 	lastRequestTime = Date.now();
 
-	const response = await fetch(url, {
-		headers: {
-			'User-Agent': USER_AGENT
-		}
-	});
+	// Use CORS proxy to bypass Discogs API CORS restrictions
+	const proxiedUrl = CORS_PROXY + encodeURIComponent(url);
+	const response = await fetch(proxiedUrl);
 
 	if (response.status === 429) {
 		// Rate limited - wait and retry once
 		await new Promise(resolve => setTimeout(resolve, 60000));
-		return fetch(url, {
-			headers: {
-				'User-Agent': USER_AGENT
-			}
-		});
+		return fetch(proxiedUrl);
 	}
 
 	return response;
