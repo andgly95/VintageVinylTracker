@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	import { blueChipRecords, getTopRecords, getCategoryDisplayName, searchRecords } from '$lib/data/blueChipRecords';
+	import { blueChipRecords, getTopRecords, getCategoryDisplayName, searchRecords, getRecordByMasterId } from '$lib/data/blueChipRecords';
 	import { topTen, watchlist, addToWatchlist } from '$lib/stores/watchlist';
 	import { collection, addToCollection } from '$lib/stores/collection';
+	import AlbumArt from '$lib/components/AlbumArt.svelte';
 	import type { BlueChipCategory, BlueChipRecord, Condition } from '$lib/domain/types';
 
 	let searchQuery = '';
@@ -55,6 +56,11 @@
 
 	function isInCollection(masterId: number): boolean {
 		return $collection.some(item => item.masterId === masterId);
+	}
+
+	function getCategoryForMasterId(masterId: number): BlueChipCategory | undefined {
+		const record = getRecordByMasterId(masterId);
+		return record?.category;
 	}
 
 	function openAddToCollection(record: BlueChipRecord) {
@@ -126,9 +132,12 @@
 						class="flex items-center gap-4 p-4 hover:bg-gray-700 border-b border-gray-700 last:border-0"
 						on:click={clearSearch}
 					>
-						<div class="w-12 h-12 bg-gray-700 rounded flex items-center justify-center text-2xl">
-							🎵
-						</div>
+						<AlbumArt
+							title={record.title}
+							artist={record.artist}
+							category={record.category}
+							size="sm"
+						/>
 						<div class="flex-1 min-w-0">
 							<div class="font-medium text-white truncate">{record.title}</div>
 							<div class="text-sm text-gray-400 truncate">{record.artist} ({record.year})</div>
@@ -144,7 +153,57 @@
 		{/if}
 	</div>
 
-	<!-- Your Top 10 -->
+	<!-- Your Collection -->
+	{#if $collection.length > 0}
+		<section>
+			<div class="flex items-center justify-between mb-4">
+				<h2 class="text-xl font-bold text-white">Your Collection</h2>
+				<a href="{base}/collection" class="text-vinyl-label hover:underline text-sm">View all ({$collection.length}) →</a>
+			</div>
+
+			<div class="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x">
+				{#each $collection.slice(0, 10) as item}
+					<a
+						href="{base}/masters/{item.masterId}"
+						class="flex-shrink-0 w-36 snap-start"
+					>
+						<div class="bg-vinyl-groove rounded-lg overflow-hidden hover:ring-2 hover:ring-green-500 transition-all">
+							<div class="aspect-square relative">
+								<AlbumArt
+									title={item.title}
+									artist={item.artist}
+									category={getCategoryForMasterId(item.masterId)}
+									size="fill"
+								/>
+								<span class="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
+									{item.condition}
+								</span>
+							</div>
+							<div class="p-3">
+								<div class="font-medium text-white text-sm truncate">{item.title}</div>
+								<div class="text-xs text-gray-400 truncate">{item.artist}</div>
+								{#if item.purchasePrice}
+									<div class="text-xs text-green-400 mt-1">${item.purchasePrice}</div>
+								{/if}
+							</div>
+						</div>
+					</a>
+				{/each}
+
+				<a
+					href="{base}/collection"
+					class="flex-shrink-0 w-36 snap-start"
+				>
+					<div class="bg-vinyl-groove rounded-lg overflow-hidden border-2 border-dashed border-gray-600 hover:border-green-500 transition-colors h-full flex flex-col items-center justify-center min-h-[200px]">
+						<span class="text-3xl mb-2 text-green-500">+</span>
+						<span class="text-sm text-gray-400">Add more</span>
+					</div>
+				</a>
+			</div>
+		</section>
+	{/if}
+
+	<!-- Your Top 10 Watchlist -->
 	<section>
 		<div class="flex items-center justify-between mb-4">
 			<h2 class="text-xl font-bold text-white">Your Top 10 Watchlist</h2>
@@ -159,8 +218,13 @@
 						class="flex-shrink-0 w-36 snap-start"
 					>
 						<div class="bg-vinyl-groove rounded-lg overflow-hidden hover:ring-2 hover:ring-vinyl-label transition-all">
-							<div class="aspect-square bg-gray-700 flex items-center justify-center text-4xl relative">
-								🎵
+							<div class="aspect-square relative">
+								<AlbumArt
+									title={item.title}
+									artist={item.artist}
+									category={getCategoryForMasterId(item.masterId)}
+									size="fill"
+								/>
 								<span class="absolute top-2 left-2 bg-vinyl-label text-vinyl-black text-xs font-bold px-2 py-1 rounded">
 									#{i + 1}
 								</span>
@@ -225,8 +289,13 @@
 
 						<a href="{base}/masters/{record.masterId}" class="flex-1 min-w-0">
 							<div class="flex items-start gap-4">
-								<div class="w-16 h-16 bg-gray-700 rounded flex items-center justify-center text-3xl flex-shrink-0">
-									🎵
+								<div class="flex-shrink-0">
+									<AlbumArt
+										title={record.title}
+										artist={record.artist}
+										category={record.category}
+										size="md"
+									/>
 								</div>
 								<div class="flex-1 min-w-0">
 									<h3 class="font-medium text-white">{record.title}</h3>

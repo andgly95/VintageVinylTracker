@@ -1383,3 +1383,7 @@ export function getCategoryDisplayName(category: BlueChipCategory): string {
 	};
 	return names[category];
 }
+
+export function getRecordByMasterId(masterId: number): BlueChipRecord | undefined {
+	return blueChipRecords.find(r => r.masterId === masterId);
+}
