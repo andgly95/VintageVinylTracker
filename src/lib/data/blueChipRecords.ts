@@ -22,7 +22,7 @@ export const blueChipRecords: BlueChipRecord[] = [
 			{ label: 'Blue Note', catno: 'BLP 4003', year: 1958, variant: 'blue_note_ny_47', description: '47 W 63rd, deep groove, RVG, ear', estimatedValue: 1500, isFirstPressing: true },
 			{ label: 'Blue Note', catno: 'BST 84003', year: 1959, variant: 'blue_note_ny_47', description: 'Stereo 47 W 63rd, deep groove', estimatedValue: 800, isFirstPressing: false }
 		],
-		thumb: 'https://i.discogs.com/placeholder-moanin.jpg'
+		thumb: 'https://coverartarchive.org/release-group/e809b0f3-5683-3248-b39a-e7ee8e86d2d9/front-250'
 	},
 	{
 		masterId: 118117,
@@ -50,7 +50,8 @@ export const blueChipRecords: BlueChipRecord[] = [
 		keyPressings: [
 			{ label: 'Blue Note', catno: 'BLP 4157', year: 1964, variant: 'blue_note_ny_47', description: 'NY USA mono, Van Gelder', estimatedValue: 450, isFirstPressing: true },
 			{ label: 'Blue Note', catno: 'BST 84157', year: 1964, variant: 'blue_note_ny_47', description: 'NY USA stereo, Van Gelder', estimatedValue: 350, isFirstPressing: true }
-		]
+		],
+		thumb: 'https://coverartarchive.org/release-group/24d2fedc-7976-3b88-bb91-b49a05f26e55/front-250'
 	},
 	{
 		masterId: 47828,
@@ -64,7 +65,8 @@ export const blueChipRecords: BlueChipRecord[] = [
 		keyPressings: [
 			{ label: 'Blue Note', catno: 'BLP 4195', year: 1965, variant: 'blue_note_ny_47', description: 'NY USA mono, Van Gelder', estimatedValue: 600, isFirstPressing: true },
 			{ label: 'Blue Note', catno: 'BST 84195', year: 1965, variant: 'blue_note_ny_47', description: 'NY USA stereo, Van Gelder', estimatedValue: 500, isFirstPressing: true }
-		]
+		],
+		thumb: 'https://coverartarchive.org/release-group/c5e5e8ad-dc89-319e-8b2d-b3ff5e59fcea/front-250'
 	},
 	{
 		masterId: 140424,
@@ -78,7 +80,8 @@ export const blueChipRecords: BlueChipRecord[] = [
 		keyPressings: [
 			{ label: 'Blue Note', catno: 'BLP 4194', year: 1966, variant: 'blue_note_ny_47', description: 'NY USA mono, Van Gelder', estimatedValue: 900, isFirstPressing: true },
 			{ label: 'Blue Note', catno: 'BST 84194', year: 1966, variant: 'blue_note_ny_47', description: 'NY USA stereo, Van Gelder', estimatedValue: 700, isFirstPressing: true }
-		]
+		],
+		thumb: 'https://coverartarchive.org/release-group/eae0c18f-f2fd-3b97-8631-3f682a2f3957/front-250'
 	},
 	{
 		masterId: 155008,
@@ -106,7 +109,8 @@ export const blueChipRecords: BlueChipRecord[] = [
 		keyPressings: [
 			{ label: 'Blue Note', catno: 'BLP 4123', year: 1963, variant: 'blue_note_ny_47', description: 'NY USA mono, Van Gelder, ear', estimatedValue: 550, isFirstPressing: true },
 			{ label: 'Blue Note', catno: 'BST 84123', year: 1963, variant: 'blue_note_ny_47', description: 'NY USA stereo, Van Gelder', estimatedValue: 400, isFirstPressing: true }
-		]
+		],
+		thumb: 'https://coverartarchive.org/release-group/88861537-d884-370c-800d-7b4a7aed782c/front-250'
 	},
 	{
 		masterId: 72373,
@@ -133,7 +137,8 @@ export const blueChipRecords: BlueChipRecord[] = [
 		keyPressings: [
 			{ label: 'Blue Note', catno: 'BLP 4163', year: 1964, variant: 'blue_note_ny_47', description: 'NY USA mono, Van Gelder, ear', estimatedValue: 800, isFirstPressing: true },
 			{ label: 'Blue Note', catno: 'BST 84163', year: 1964, variant: 'blue_note_ny_47', description: 'NY USA stereo', estimatedValue: 600, isFirstPressing: true }
-		]
+		],
+		thumb: 'https://coverartarchive.org/release-group/bc6c2573-bc7d-346a-8880-0e34b8fb7e50/front-250'
 	},
 	{
 		masterId: 62796,

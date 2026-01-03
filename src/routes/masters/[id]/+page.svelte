@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
-	import { onMount } from 'svelte';
 	import { blueChipRecords, getCategoryDisplayName } from '$lib/data/blueChipRecords';
 	import { watchlist, addToWatchlist, topTen } from '$lib/stores/watchlist';
 	import { collection, addToCollection } from '$lib/stores/collection';
-	import { albumArtCache, fetchAlbumArt } from '$lib/stores/albumArtCache';
+	import { albumArtCache } from '$lib/stores/albumArtCache';
 	import { getMarketplaceUrl } from '$lib/api/discogs';
 	import { getLabelVariantDisplayName, getQualityGrade } from '$lib/domain/pressingEvaluator';
 	import AlbumArt from '$lib/components/AlbumArt.svelte';
@@ -37,20 +36,8 @@
 		return true;
 	}) || [];
 
-	// Album art from cache
-	$: coverUrl = $albumArtCache[masterId]?.url;
-
-	// Fetch album art when page loads
-	onMount(() => {
-		if (masterId && !albumArtCache.get(masterId)) {
-			fetchAlbumArt(masterId);
-		}
-	});
-
-	// Also fetch when masterId changes (navigation between records)
-	$: if (masterId && !albumArtCache.get(masterId)) {
-		fetchAlbumArt(masterId);
-	}
+	// Album art: prefer record's thumb field, fall back to cache
+	$: coverUrl = record?.thumb || $albumArtCache[masterId]?.url;
 
 	function handleAddToWatchlist() {
 		if (!record) return;

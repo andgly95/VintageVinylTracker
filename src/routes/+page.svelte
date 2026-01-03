@@ -65,7 +65,9 @@
 	}
 
 	function getCoverUrl(masterId: number): string | undefined {
-		return $albumArtCache[masterId]?.url;
+		// Prefer record's thumb field, fall back to cache
+		const record = getRecordByMasterId(masterId);
+		return record?.thumb || $albumArtCache[masterId]?.url;
 	}
 
 	function openAddToCollection(record: BlueChipRecord) {
